@@ -1,33 +1,45 @@
-
-import dotenv from "dotenv"
-
+import dotenv from "dotenv";
 
 dotenv.config();
 interface EnvConfig {
-    PORT:string;
-    DB_URL:string;
-    NODE_ENV:"development"|"production";
+  PORT: string;
+  DB_URL: string;
+  NODE_ENV: "development" | "production";
+  JWT_ACCESS_SECRET: string;
+  JWT_ACCESS_EXPIRES: string;
+  BCRYPT_SALT_ROUND: string;
+  SUPPER_ADMIN_PASSWORD:string,
+  SUPPER_ADMIN_EMAIL:string
 }
 
-
-
-
-
-const loadEnvVariables=():EnvConfig=>{
-    const requirementEnvVariable:string[]=["PORT","DB_URL","NODE_ENV"];
-requirementEnvVariable.forEach(key=>{
-    if(!process.env[key]){
-        throw new Error(`messing environment variable ${key}`)
+const loadEnvVariables = (): EnvConfig => {
+  const requirementEnvVariable: string[] = [
+    "PORT",
+    "DB_URL",
+    "NODE_ENV",
+    "BCRYPT_SALT_ROUND",
+    "JWT_ACCESS_EXPIRES",
+    "JWT_ACCESS_SECRET",
+    "SUPPER_ADMIN_PASSWORD",
+    "SUPPER_ADMIN_EMAIL"
+  ];
+  requirementEnvVariable.forEach((key) => {
+    if (!process.env[key]) {
+      throw new Error(`messing environment variable ${key}`);
     }
-})
+  });
 
-    return {
-    PORT:process.env.PORT as string,
-    DB_URL:process.env.DB_URL as string,
-    NODE_ENV:process.env.NODE_ENV as "development"|"production"
-}
+  return {
+    PORT: process.env.PORT as string,
+    DB_URL: process.env.DB_URL as string,
+    NODE_ENV: process.env.NODE_ENV as "development" | "production",
+      BCRYPT_SALT_ROUND:process.env. BCRYPT_SALT_ROUND as string,
+     JWT_ACCESS_EXPIRES:process.env.JWT_ACCESS_EXPIRES as string,
+    JWT_ACCESS_SECRET:process.env.  JWT_ACCESS_SECRET as string,
+    SUPPER_ADMIN_PASSWORD:process.env.SUPPER_ADMIN_PASSWORD as string,
+    SUPPER_ADMIN_EMAIL:process.env.SUPPER_ADMIN_EMAIL as string
 
-}
+  };
+};
 
-
-export const envVars=loadEnvVariables()
+export const envVars = loadEnvVariables();

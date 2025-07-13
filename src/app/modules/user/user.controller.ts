@@ -1,10 +1,13 @@
+import { verifyToken,} from './../../utlies/jwt';
 import { NextFunction, Request, Response } from "express";
 
-import httpStatus, { StatusCodes } from "http-status-codes";
+import httpStatus from "http-status-codes";
 import { userService } from "./user.service";
 
 import { catchAsync } from "../../utlies/catchAsynce";
 import { sentResponse } from "../../utlies/sentResponse";
+import { envVars } from '../../config/env';
+import { JwtPayload } from 'jsonwebtoken';
 //import AppError from "../../errorHelper/AppError";
 
 // const createUserFunction=async(req:Request,res:Response)=>{
@@ -31,13 +34,11 @@ import { sentResponse } from "../../utlies/sentResponse";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const createUser = catchAsync(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async (req: Request, res: Response, next: NextFunction) => {
     const user = await userService.createUser(req.body);
 
-    // res.status(httpStatus.CREATED).json({
-    //   message: "User created successfully",
-    //   user,
-    // });
+
     sentResponse(res,{
       success:true,
       statusCode:httpStatus.CREATED,
@@ -46,14 +47,28 @@ const createUser = catchAsync(
     })
   });
 
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const updateUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const userId=req.params.id;
+
+    const verifiedToken=req.user
+    const patLoad=req.body;
+    const user = await userService.updateUser(userId,patLoad,verifiedToken);
+
+
+    sentResponse(res,{
+      success:true,
+      statusCode:httpStatus.CREATED,
+      message:"user updated successfully",
+      data:user
+    })
+  });
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
   const result = await userService.getAllUsers();
-  // res.status(httpStatus.OK).json({
-  //   success:true,
-  //   message:"ALL User Retrieve successfully",
-  //   data:users
-  // })
+ 
   sentResponse(res,{
       success:true,
       statusCode:httpStatus.CREATED,
@@ -69,6 +84,7 @@ const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
 export const UserControllers = {
   createUser,
   getAllUsers,
+  updateUser
 };
 
 //route machine ->controller ->service -> model-> DB
